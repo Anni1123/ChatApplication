@@ -2,6 +2,7 @@ package com.example.chatapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,6 +24,7 @@ public class Register extends AppCompatActivity {
     private EditText regpasss;
     private Button regbutt;
     private FirebaseAuth mAuth;
+    private Toolbar mtoolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,10 @@ public class Register extends AppCompatActivity {
         regemaill=(EditText)findViewById(R.id.regemail);
         regpasss=(EditText)findViewById(R.id.regpass);
         regbutt =(Button) findViewById(R.id.regbutton);
+        mtoolbar=(Toolbar)findViewById(R.id.register_toolbar);
+        setSupportActionBar(mtoolbar);
+        getSupportActionBar().setTitle("Create Account");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         regbutt.setOnClickListener(new View.OnClickListener() {
             @Override
