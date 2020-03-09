@@ -10,8 +10,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +27,7 @@ public class Register extends AppCompatActivity {
     private Button regbutt;
     private FirebaseAuth mAuth;
     private Toolbar mtoolbar;
+    private ProgressDialog mprogress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class Register extends AppCompatActivity {
         setSupportActionBar(mtoolbar);
         getSupportActionBar().setTitle("Create Account");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mprogress=new ProgressDialog(this);
 
         regbutt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +50,15 @@ public class Register extends AppCompatActivity {
                 String name=regnamee.getText().toString();
                 String email=regemaill.getText().toString();
                 String pass=regpasss.getText().toString();
-                reg_user(name,email,pass);
+                if(!TextUtils.isEmpty(name)||!TextUtils.isEmpty(email)||!TextUtils.isEmpty(pass)){
+                    mprogress.setTitle("Registering User");
+                    mprogress.setMessage("Please Wait while we are creating your account");
+                    mprogress.setCanceledOnTouchOutside(false);
+                    mprogress.show();
+                    reg_user(name,email,pass);
+                }
+
+
             }
         });
     }
@@ -56,16 +68,19 @@ public class Register extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
 
+                    mprogress.dismiss();
                     Intent mainIntent=new Intent(Register.this,MainActivity.class);
                     startActivity(mainIntent);
                     finish();
                 }
                 else{
-                    Toast.makeText(Register.this,"You got some error",Toast.LENGTH_LONG);
+                    mprogress.hide();
+                    Toast.makeText(Register.this,"Cannot Sign In..Plaese Try Again",Toast.LENGTH_LONG);
 
                 }
             }
         });
     }
+
 
 }
