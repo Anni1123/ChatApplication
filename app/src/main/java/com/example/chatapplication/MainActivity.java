@@ -3,20 +3,25 @@ package com.example.chatapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class  MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
+    private ViewPager mviewPager;
     private FirebaseAuth firebaseAuth;
     private Toolbar mtoolbar;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private TabLayout mTabLayout;
 
 
     @Override
@@ -24,9 +29,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
-      mtoolbar=(Toolbar)findViewById(R.id.main_page_toolbar);
+        mtoolbar=(Toolbar)findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mtoolbar);
-        getSupportActionBar().setTitle("APP");
+        getSupportActionBar().setTitle("My Chat App");
+        mviewPager=(ViewPager) findViewById(R.id.viewpager);
+        mSectionsPagerAdapter=new SectionsPagerAdapter(getSupportFragmentManager());
+        mviewPager.setAdapter(mSectionsPagerAdapter );
+        mTabLayout=(TabLayout)findViewById(R.id.tablayout);
+        mTabLayout.setupWithViewPager(mviewPager);
     }
     @Override
     public void onStart() {
