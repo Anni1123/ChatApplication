@@ -20,14 +20,15 @@
         app:civ_border_width="2dp" />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="150dp"
+        android:id="@+id/imageChange"
+        android:layout_width="142dp"
+        android:layout_marginLeft="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="133dp"
-        android:layout_marginBottom="117dp"
+        android:layout_marginStart="143dp"
+        android:layout_marginBottom="124dp"
         android:background="@color/colorAccent"
         android:text="Change Image" />
 
@@ -50,6 +51,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="259dp"
         android:layout_marginEnd="105dp"
+        android:layout_marginLeft="100dp"
         android:text="DisplayName"
         android:textColor="#FFFFFF"
         android:textSize="20dp" />
@@ -61,6 +63,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="306dp"
+        android:layout_marginLeft="100dp"
         android:text="Hi,There.I am Using ChatBox"
         android:textColor="#FFFFFF" />
 

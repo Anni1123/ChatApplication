@@ -3,7 +3,10 @@ package com.example.chatapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +27,8 @@ public class SettingActivity extends AppCompatActivity {
     private CircleImageView mimage;
     private TextView mname;
     private TextView mstatus;
+    private Button mStatusBtn;
+    private Button mImageBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +39,8 @@ public class SettingActivity extends AppCompatActivity {
         mCurrentUser= FirebaseAuth.getInstance().getCurrentUser();
         String current_Uid=mCurrentUser.getUid();
 
+        mStatusBtn=(Button)findViewById(R.id.ChangeStatus);
+        mImageBtn=(Button)findViewById(R.id.imageChange);
         userDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(current_Uid);
         userDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -54,5 +61,14 @@ public class SettingActivity extends AppCompatActivity {
 
             }
         });
+        mStatusBtn.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       String status_value= mStatusBtn.getText().toString();
+                   Intent status_intent=new Intent(SettingActivity.this,StatusActivity.class);
+                   status_intent.putExtra("status value",status_value);
+                   startActivity(status_intent);
+         }
+     });
     }
 }
