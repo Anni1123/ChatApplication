@@ -9,6 +9,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -19,6 +22,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
 public class Register extends AppCompatActivity {
 
     private EditText regnamee;
@@ -28,6 +33,7 @@ public class Register extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Toolbar mtoolbar;
     private ProgressDialog mprogress;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,17 +68,30 @@ public class Register extends AppCompatActivity {
             }
         });
     }
-    private void reg_user(String name,String email,String password){
+    private void reg_user(final String name, String email, String password){
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
 
+
+                    FirebaseUser current_user=FirebaseAuth.getInstance().getCurrentUser();
+                    String uid=current_user.getUid();
+                    mDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+
+                    HashMap<String, String> userMap=new HashMap<>();
+                    userMap.put("name",name);
+                    userMap.put("status","Hi,There i am using chatApp");
+                    userMap.put("image","default");
+                    userMap.put("thumb_image","default");
+                    mDatabase.setValue(userMap);
+                     /*
                     mprogress.dismiss();
                     Intent mainIntent=new Intent(Register.this,MainActivity.class);
                     mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(mainIntent);
                     finish();
+                    */
                 }
                 else{
                     mprogress.hide();
