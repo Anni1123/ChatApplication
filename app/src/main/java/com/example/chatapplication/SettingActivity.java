@@ -2,7 +2,8 @@ package com.example.chatapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +29,7 @@ public class SettingActivity extends AppCompatActivity {
     private TextView mname;
     private TextView mstatus;
     private Button mStatusBtn;
+    private static final int GALLERY_PICK=1;
     private Button mImageBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,5 +72,20 @@ public class SettingActivity extends AppCompatActivity {
                    startActivity(status_intent);
          }
      });
+        mImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .start(SettingActivity.this);
+                /*
+                Intent galleryIntent=new Intent();
+                galleryIntent.setType("image/*");
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(galleryIntent,"SELECT IMAGE"),GALLERY_PICK);
+
+                 */
+            }
+        });
     }
 }
