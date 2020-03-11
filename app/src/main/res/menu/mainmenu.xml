@@ -6,7 +6,7 @@
         android:id="@+id/menulogout"
         android:title="Logout" />
     <item
-        android:id="@+id/menu_set"
+        android:id="@+id/menu_setting"
         android:title="Settings" />
     <item
         android:id="@+id/menu_user"
