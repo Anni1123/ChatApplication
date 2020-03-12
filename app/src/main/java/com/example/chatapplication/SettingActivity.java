@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -62,14 +63,17 @@ public class SettingActivity extends AppCompatActivity {
         userDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-             String name=dataSnapshot.child("name").getValue().toString();
-                String image=dataSnapshot.child("image").getValue().toString();
-                String status=dataSnapshot.child("status").getValue().toString();
-                String thumb_image=dataSnapshot.child("thumb_image").getValue().toString();
+                String name = dataSnapshot.child("name").getValue().toString();
+                String image = dataSnapshot.child("image").getValue().toString();
+                String status = dataSnapshot.child("status").getValue().toString();
+                String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
 
                 mname.setText(name);
                 mstatus.setText(status);
-                Picasso.with(SettingActivity.this).load(image).into(mimage);
+                if (!image.equals("default")) {
+                    Picasso.with(SettingActivity.this).load(image).resize(50, 50).
+                            centerCrop().into(mimage);
+                }
             }
 
             @Override
@@ -127,8 +131,7 @@ public class SettingActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()) {
-
-                            String download_url = task.getResult().getMetadata().toString();
+                            String download_url = task.getResult().getUploadSessionUri().toString();
                             userDatabase.child("image").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -148,16 +151,4 @@ public class SettingActivity extends AppCompatActivity {
             }
         }
     }
-        public static String random(){
-            Random generator = new Random();
-            StringBuilder randomStringBuilder = new StringBuilder();
-            int randomLength = generator.nextInt(10);
-            char tempChar;
-            for (int i = 0; i < randomLength; i++){
-                tempChar = (char) (generator.nextInt(96) + 32);
-                randomStringBuilder.append(tempChar);
-            }
-            return randomStringBuilder.toString();
-        }
-
 }
