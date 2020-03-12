@@ -63,17 +63,15 @@ public class SettingActivity extends AppCompatActivity {
         userDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = dataSnapshot.child("name").getValue().toString();
-                String image = dataSnapshot.child("image").getValue().toString();
-                String status = dataSnapshot.child("status").getValue().toString();
-                String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
+             String name=dataSnapshot.child("name").getValue().toString();
+                String image=dataSnapshot.child("image").getValue().toString();
+                String status=dataSnapshot.child("status").getValue().toString();
+                String thumb_image=dataSnapshot.child("thumb_image").getValue().toString();
 
                 mname.setText(name);
                 mstatus.setText(status);
-                if (!image.equals("default")) {
-                    Picasso.with(SettingActivity.this).load(image).resize(50, 50).
-                            centerCrop().into(mimage);
-                }
+                Picasso.with(SettingActivity.this).load(image).resize(50, 50).
+                        centerCrop().into(mimage);
             }
 
             @Override
@@ -121,7 +119,7 @@ public class SettingActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 mProgressDialog=new ProgressDialog(SettingActivity.this);
                 mProgressDialog.setTitle("Uploading Image...");
-                mProgressDialog.setMessage("Plaese wait while image is uploadingt");
+                mProgressDialog.setMessage("Plaese wait while image is uploading");
                 mProgressDialog.setCanceledOnTouchOutside(false);
                 mProgressDialog.show();
                 String current_user_id=mCurrentUser.getUid();
@@ -131,7 +129,7 @@ public class SettingActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()) {
-                            String download_url = task.getResult().getUploadSessionUri().toString();
+                            String download_url = task.getResult().getMetadata().toString();
                             userDatabase.child("image").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -146,8 +144,7 @@ public class SettingActivity extends AppCompatActivity {
                         }
                     }
                 });
-            }
-            else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
         }
