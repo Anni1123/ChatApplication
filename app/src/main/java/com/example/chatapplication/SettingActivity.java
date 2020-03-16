@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
@@ -42,31 +43,32 @@ public class SettingActivity extends AppCompatActivity {
     private TextView mname;
     private TextView mstatus;
     private Button mStatusBtn;
-    private static final int GALLERY_PICK=1;
+    private static final int GALLERY_PICK = 1;
     private Button mImageBtn;
     private ProgressDialog mProgressDialog;
     private StorageReference mImageStorage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        mimage=(CircleImageView)findViewById(R.id.profile_image);
-        mname=(TextView)findViewById(R.id.DisplayName);
-        mstatus=(TextView)findViewById(R.id.statusupdate);
-        mCurrentUser= FirebaseAuth.getInstance().getCurrentUser();
-        String current_Uid=mCurrentUser.getUid();
+        mimage = (CircleImageView) findViewById(R.id.profile_image);
+        mname = (TextView) findViewById(R.id.DisplayName);
+        mstatus = (TextView) findViewById(R.id.statusupdate);
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String current_Uid = mCurrentUser.getUid();
 
-        mImageStorage= FirebaseStorage.getInstance().getReference();
-        mStatusBtn=(Button)findViewById(R.id.ChangeStatus);
-        mImageBtn=(Button)findViewById(R.id.imageChange);
-        userDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(current_Uid);
+        mImageStorage = FirebaseStorage.getInstance().getReference();
+        mStatusBtn = (Button) findViewById(R.id.ChangeStatus);
+        mImageBtn = (Button) findViewById(R.id.imageChange);
+        userDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_Uid);
         userDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-             String name=dataSnapshot.child("name").getValue().toString();
-                String image=dataSnapshot.child("image").getValue().toString();
-                String status=dataSnapshot.child("status").getValue().toString();
-                String thumb_image=dataSnapshot.child("thumb_image").getValue().toString();
+                String name = dataSnapshot.child("name").getValue().toString();
+                String image = dataSnapshot.child("image").getValue().toString();
+                String status = dataSnapshot.child("status").getValue().toString();
+                String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
 
                 mname.setText(name);
                 mstatus.setText(status);
@@ -80,22 +82,22 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
         mStatusBtn.setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                       String status_value= mStatusBtn.getText().toString();
-                   Intent status_intent=new Intent(SettingActivity.this,StatusActivity.class);
-                   status_intent.putExtra("status value",status_value);
-                   startActivity(status_intent);
-         }
-     });
+            @Override
+            public void onClick(View v) {
+                String status_value = mStatusBtn.getText().toString();
+                Intent status_intent = new Intent(SettingActivity.this, StatusActivity.class);
+                status_intent.putExtra("status value", status_value);
+                startActivity(status_intent);
+            }
+        });
         mImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent galleryIntent=new Intent();
+                Intent galleryIntent = new Intent();
                 galleryIntent.setType("image/*");
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(galleryIntent,"SELECT IMAGE"),GALLERY_PICK);
+                startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
 /*
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
@@ -117,35 +119,23 @@ public class SettingActivity extends AppCompatActivity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                mProgressDialog=new ProgressDialog(SettingActivity.this);
+                mProgressDialog = new ProgressDialog(SettingActivity.this);
                 mProgressDialog.setTitle("Uploading Image...");
-                mProgressDialog.setMessage("Plaese wait while image is uploading");
-                mProgressDialog.setCanceledOnTouchOutside(false);
+                mProgressDialog.setMessage("Please wait while image is uploading");
+                mProgressDialog.setCanceledOnTouchOutside(true);
                 mProgressDialog.show();
-                String current_user_id=mCurrentUser.getUid();
-                Uri resultUri = result.getUri();
-                StorageReference filepath = mImageStorage.child("profile_images").child(current_user_id + ".jpg");
-                filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                String current_user_id = mCurrentUser.getUid();
+                final Uri resultUri = result.getUri();
+                StorageReference filepath = mImageStorage.child("profile_images").child(resultUri.getLastPathSegment());
+                filepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            String download_url = task.getResult().getMetadata().toString();
-                            userDatabase.child("image").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    mProgressDialog.dismiss();
-                                    Toast.makeText(SettingActivity.this,"done",Toast.LENGTH_LONG).show();
-                                }
-                            });
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                        } else {
-                            Toast.makeText(SettingActivity.this, "Not Working", Toast.LENGTH_LONG).show();
-                            mProgressDialog.dismiss();
-                        }
+                        Picasso.with(SettingActivity.this).load(resultUri).into(mimage);
+                        Toast.makeText(SettingActivity.this,"Done",Toast.LENGTH_LONG).show();
+                        mProgressDialog.dismiss();
                     }
                 });
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
             }
         }
     }
