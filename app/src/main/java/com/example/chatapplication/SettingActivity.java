@@ -17,7 +17,11 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+
+import java.io.File;
 import java.util.Random;
+
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -34,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -72,8 +77,9 @@ public class SettingActivity extends AppCompatActivity {
 
                 mname.setText(name);
                 mstatus.setText(status);
-                Picasso.with(SettingActivity.this).load(image).resize(50, 50).
-                        centerCrop().into(mimage);
+                if (!image.equals("default")) {
+                    Picasso.with(SettingActivity.this).load(image).placeholder(R.drawable.anni).into(mimage);
+                }
             }
 
             @Override
@@ -124,8 +130,12 @@ public class SettingActivity extends AppCompatActivity {
                 mProgressDialog.setMessage("Please wait while image is uploading");
                 mProgressDialog.setCanceledOnTouchOutside(true);
                 mProgressDialog.show();
-                String current_user_id = mCurrentUser.getUid();
                 final Uri resultUri = result.getUri();
+
+                File thumbfile=new File(resultUri.getPath());
+                String current_user_id = mCurrentUser.getUid();
+
+
                 StorageReference filepath = mImageStorage.child("profile_images").child(resultUri.getLastPathSegment());
                 filepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override

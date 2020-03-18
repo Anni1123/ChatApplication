@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,9 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserActivity extends AppCompatActivity {
 
@@ -29,6 +34,10 @@ protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
        setSupportActionBar(mtoolbar);
+        mtoolbar=(Toolbar)findViewById(R.id.user_layout);
+        setSupportActionBar(mtoolbar);
+       getSupportActionBar().setTitle("Accounts Update");
+
     mRecycle=(RecyclerView)findViewById(R.id.recycle);
     mUserDatabase= FirebaseDatabase.getInstance().getReference().child("Users");
     mRecycle.setHasFixedSize(true);
@@ -55,6 +64,16 @@ protected void onCreate(Bundle savedInstanceState) {
                 holder.setName(model.getName());
 
                 holder.setStatus(model.getStatus());
+                holder.setImage(model.getImage(),getApplicationContext());
+                final String user_id=getRef(position).getKey();
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent profileIntent=new Intent(UserActivity.this,ProfileActivity.class);
+                        profileIntent.putExtra("user_id",user_id);
+                        startActivity(profileIntent);
+                    }
+                });
             }
         };
         firebaseRecyclerAdapter.startListening();
@@ -77,6 +96,10 @@ protected void onCreate(Bundle savedInstanceState) {
             userstatus.setText(status);
         }
 
+        public void setImage(String image, Context ctx){
+            CircleImageView imageuser=(CircleImageView)mView.findViewById(R.id.profile_image);
+            Picasso.with(ctx).load(image).placeholder(R.drawable.anni).into(imageuser);
+        }
     }
     @Override
     public void onStop() {
