@@ -54,6 +54,7 @@ protected void onCreate(Bundle savedInstanceState) {
 
                 holder.setName(model.getName());
 
+                holder.setStatus(model.getStatus());
             }
         };
         firebaseRecyclerAdapter.startListening();
@@ -67,9 +68,13 @@ protected void onCreate(Bundle savedInstanceState) {
             mView=itemView;
         }
 
-        public void setName(String name){
-            TextView usersname=(TextView)mView.findViewById(R.id.display_name);
+        public void setName(String name) {
+            TextView usersname = (TextView) mView.findViewById(R.id.display_name);
             usersname.setText(name);
+        }
+        public void setStatus(String status){
+            TextView userstatus=(TextView)mView.findViewById(R.id.default_status);
+            userstatus.setText(status);
         }
 
     }
