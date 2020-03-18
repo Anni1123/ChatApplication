@@ -130,9 +130,8 @@ public class SettingActivity extends AppCompatActivity {
                 filepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
                         Picasso.with(SettingActivity.this).load(resultUri).into(mimage);
-                        Toast.makeText(SettingActivity.this,"Done",Toast.LENGTH_LONG).show();
+                        Toast.makeText(SettingActivity.this, "Done", Toast.LENGTH_LONG).show();
                         mProgressDialog.dismiss();
                     }
                 });

@@ -1,6 +1,10 @@
 package com.example.chatapplication;
 
 public class Users {
+
+    public String name;
+    public String image;
+    public String status;
     public Users(String name, String image, String status) {
         this.name = name;
         this.image = image;
@@ -34,8 +38,5 @@ public class Users {
         this.status = status;
     }
 
-    public String name;
-    public String image;
-    public String status;
 
 }

@@ -46,7 +46,7 @@ public class Register extends AppCompatActivity {
         regbutt =(Button) findViewById(R.id.regbutton);
         mtoolbar=(Toolbar)findViewById(R.id.register_toolbar);
         setSupportActionBar(mtoolbar);
-        getSupportActionBar().setTitle("Create Account");
+        mtoolbar.setTitle("Register");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mprogress=new ProgressDialog(this);
 

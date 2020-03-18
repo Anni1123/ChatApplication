@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -41,8 +42,6 @@ public class StatusActivity extends AppCompatActivity {
 
         mStatusReference= FirebaseDatabase.getInstance().getReference().child("Users").child(currentUid);
         setSupportActionBar(mToolBar);
-        getSupportActionBar().setTitle("Accounts Update");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String status_value=getIntent().getStringExtra("status_value");
         mstatus=(TextInputEditText) findViewById(R.id.statush);
@@ -62,6 +61,7 @@ public class StatusActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             mDialog.dismiss();
+                            startActivity(new Intent(StatusActivity.this,SettingActivity.class));
                         }
                         else{
                             Toast.makeText(getApplicationContext(),"there is SOme error while Updating",Toast.LENGTH_LONG).show();
