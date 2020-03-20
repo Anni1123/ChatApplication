@@ -52,6 +52,7 @@ public class SettingActivity extends AppCompatActivity {
     private Button mImageBtn;
     private ProgressDialog mProgressDialog;
     private StorageReference mImageStorage;
+    private Uri imageUrl=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +78,8 @@ public class SettingActivity extends AppCompatActivity {
 
                 mname.setText(name);
                 mstatus.setText(status);
-                if (!image.equals("default")) {
-                    Picasso.with(SettingActivity.this).load(image).placeholder(R.drawable.anni).into(mimage);
+                Picasso.with(SettingActivity.this).load(image).placeholder(R.drawable.anni).into(mimage);
                 }
-            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -104,11 +103,6 @@ public class SettingActivity extends AppCompatActivity {
                 galleryIntent.setType("image/*");
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
-/*
-                CropImage.activity()
-                        .setGuidelines(CropImageView.Guidelines.ON)
-                        .start(SettingActivity.this);
-                */
             }
         });
     }
@@ -128,21 +122,30 @@ public class SettingActivity extends AppCompatActivity {
                 mProgressDialog = new ProgressDialog(SettingActivity.this);
                 mProgressDialog.setTitle("Uploading Image...");
                 mProgressDialog.setMessage("Please wait while image is uploading");
-                mProgressDialog.setCanceledOnTouchOutside(true);
+                mProgressDialog.setCanceledOnTouchOutside(false);
                 mProgressDialog.show();
                 final Uri resultUri = result.getUri();
-
-                File thumbfile=new File(resultUri.getPath());
-                String current_user_id = mCurrentUser.getUid();
-
-
-                StorageReference filepath = mImageStorage.child("profile_images").child(resultUri.getLastPathSegment());
+                String current_user=mCurrentUser.getUid();
+                final StorageReference filepath = mImageStorage.child("profile_img").child(current_user +".jpg");
                 filepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Picasso.with(SettingActivity.this).load(resultUri).into(mimage);
-                        Toast.makeText(SettingActivity.this, "Done", Toast.LENGTH_LONG).show();
-                        mProgressDialog.dismiss();
+                        filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String url = uri.toString();
+                                Toast.makeText(SettingActivity.this, "Done", Toast.LENGTH_LONG).show();
+                                userDatabase.child("image").setValue(url);
+                                mProgressDialog.dismiss();
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        mProgressDialog.setTitle("Uploading error.");
+                        mProgressDialog.setMessage("Try Again");
+                        mProgressDialog.show();
                     }
                 });
             }
