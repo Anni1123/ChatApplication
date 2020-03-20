@@ -30,7 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ImageView profileImage;
     private TextView userstatus,username,userfriend;
-    private Button sendreq;
+    private Button sendreq,declinereq;
     private FirebaseUser mcurrentUser;
     private DatabaseReference databaseReference;
     private DatabaseReference mReqDatabse;
@@ -42,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         final String user_id = getIntent().getStringExtra("user_id");
+        declinereq=(Button)findViewById(R.id.decline);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
         mReqDatabse=FirebaseDatabase.getInstance().getReference().child("req_data");
         friendDatabse=FirebaseDatabase.getInstance().getReference().child("Friends");
@@ -51,6 +52,8 @@ public class ProfileActivity extends AppCompatActivity {
         userstatus = (TextView) findViewById(R.id.prostatus);
         userfriend = (TextView) findViewById(R.id.profriend);
 
+        declinereq.setVisibility(View.INVISIBLE);
+        declinereq.setEnabled(false);
         current_state = "not friend";
         sendreq = (Button) findViewById(R.id.proreq);
         progressDialog = new ProgressDialog(this);
@@ -78,6 +81,8 @@ public class ProfileActivity extends AppCompatActivity {
                                 sendreq.setEnabled(true);
                                 current_state="req_received";
                                 sendreq.setText("Accept Friend Request");
+                                declinereq.setVisibility(View.VISIBLE);
+                                declinereq.setEnabled(true);
                             }
                             else if(req_type.equals("req sent")){
                                 current_state="req_sent";
@@ -91,6 +96,8 @@ public class ProfileActivity extends AppCompatActivity {
                                 if(dataSnapshot.hasChild(user_id)){
                                     current_state="Friends";
                                     sendreq.setText("Unfriend");
+                                    declinereq.setVisibility(View.INVISIBLE);
+                                    declinereq.setEnabled(false);
                                 }
                                 progressDialog.dismiss();
                             }
@@ -132,6 +139,8 @@ public class ProfileActivity extends AppCompatActivity {
                                     public void onSuccess(Void aVoid) {
                                         current_state="req sent";
                                         sendreq.setText("Cancel Friend Request");
+                                        declinereq.setVisibility(View.INVISIBLE);
+                                        declinereq.setEnabled(false);
                                       //  Toast.makeText(ProfileActivity.this,"Request Sent",Toast.LENGTH_LONG).show();
 
                                     }
@@ -156,6 +165,8 @@ public class ProfileActivity extends AppCompatActivity {
                                     sendreq.setEnabled(true);
                                     current_state="not friend";
                                     sendreq.setText("Send Friend Request");
+                                    declinereq.setVisibility(View.INVISIBLE);
+                                    declinereq.setEnabled(false);
                                 }
                             });
                         }
@@ -181,6 +192,8 @@ public class ProfileActivity extends AppCompatActivity {
                                                     sendreq.setEnabled(true);
                                                     current_state="Friends";
                                                     sendreq.setText("Unfriend");
+                                                    declinereq.setVisibility(View.INVISIBLE);
+                                                    declinereq.setEnabled(false);
                                                 }
                                             });
                                         }
