@@ -11,6 +11,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -68,17 +70,31 @@ public class SettingActivity extends AppCompatActivity {
         mStatusBtn = (Button) findViewById(R.id.ChangeStatus);
         mImageBtn = (Button) findViewById(R.id.imageChange);
         userDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_Uid);
+        userDatabase.keepSynced(true);
         userDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String name = dataSnapshot.child("name").getValue().toString();
-                String image = dataSnapshot.child("image").getValue().toString();
+                final String image = dataSnapshot.child("image").getValue().toString();
                 String status = dataSnapshot.child("status").getValue().toString();
                 String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
 
                 mname.setText(name);
                 mstatus.setText(status);
-                Picasso.with(SettingActivity.this).load(image).placeholder(R.drawable.anni).into(mimage);
+               // Picasso.with(SettingActivity.this).load(image).placeholder(R.drawable.anni).into(mimage);
+                Picasso.with(SettingActivity.this).load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.anni).
+                        into(mimage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError() {
+
+                                Picasso.with(SettingActivity.this).load(image).placeholder(R.drawable.anni).into(mimage);
+                            }
+                        });
                 }
 
             @Override
