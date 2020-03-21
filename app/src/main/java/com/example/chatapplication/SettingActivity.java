@@ -95,7 +95,11 @@ public class SettingActivity extends AppCompatActivity {
                                 Picasso.with(SettingActivity.this).load(image).placeholder(R.drawable.anni).into(mimage);
                             }
                         });
-                }
+
+
+
+
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

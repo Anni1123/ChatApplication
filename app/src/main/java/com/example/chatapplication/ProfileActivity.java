@@ -25,6 +25,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -34,6 +35,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseUser mcurrentUser;
     private DatabaseReference databaseReference;
     private DatabaseReference mReqDatabse;
+    private DatabaseReference notificationDatabase;
     private ProgressDialog progressDialog;
     private String current_state;
     private DatabaseReference friendDatabse;
@@ -46,6 +48,7 @@ public class ProfileActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
         mReqDatabse=FirebaseDatabase.getInstance().getReference().child("req_data");
         friendDatabse=FirebaseDatabase.getInstance().getReference().child("Friends");
+        notificationDatabase=FirebaseDatabase.getInstance().getReference().child("Notification");
         mcurrentUser= FirebaseAuth.getInstance().getCurrentUser();
         username = (TextView) findViewById(R.id.userid);
         profileImage = (ImageView) findViewById(R.id.imageprofile);
@@ -71,6 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
                 userstatus.setText(disstatus);
                 Picasso.with(ProfileActivity.this).load(disimage).placeholder(R.drawable.anni).into(profileImage);
                 //-----Friendlist\Request Feature-------------//
+
                 mReqDatabse.child(mcurrentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -137,11 +141,20 @@ public class ProfileActivity extends AppCompatActivity {
                                 mReqDatabse.child(user_id).child(mcurrentUser.getUid()).child("request_type").setValue("received").addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        current_state="req sent";
-                                        sendreq.setText("Cancel Friend Request");
-                                        declinereq.setVisibility(View.INVISIBLE);
-                                        declinereq.setEnabled(false);
-                                      //  Toast.makeText(ProfileActivity.this,"Request Sent",Toast.LENGTH_LONG).show();
+                                        HashMap<String ,String > notificationdata=new HashMap<>();
+                                        notificationdata.put("from",mcurrentUser.getUid());
+                                        notificationdata.put("type","request");
+                                        notificationDatabase.child(user_id).push().setValue(notificationdata).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                current_state="req sent";
+                                                sendreq.setText("Cancel Friend Request");
+                                                declinereq.setVisibility(View.INVISIBLE);
+                                                declinereq.setEnabled(false);
+                                            }
+                                        });
+
+                                        //  Toast.makeText(ProfileActivity.this,"Request Sent",Toast.LENGTH_LONG).show();
 
                                     }
                                 });
@@ -161,7 +174,9 @@ public class ProfileActivity extends AppCompatActivity {
                             mReqDatabse.child(user_id).child(mcurrentUser.getUid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-
+                                    HashMap<String ,String > notificationdata=new HashMap<>();
+                                    notificationdata.put("from",mcurrentUser.getUid());
+                                    notificationdata.put("type","sent");
                                     sendreq.setEnabled(true);
                                     current_state="not friend";
                                     sendreq.setText("Send Friend Request");
@@ -175,11 +190,12 @@ public class ProfileActivity extends AppCompatActivity {
                 //---------------Request received State------------//
                 if(current_state.equals("req_received")){
                     final String currentdate= DateFormat.getDateTimeInstance().format(new Date());
+
                     friendDatabse.child(mcurrentUser.getUid()).child(user_id).setValue(currentdate).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
 
-                            friendDatabse.child(user_id).child(mcurrentUser.getUid()).setValue(currentdate).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            friendDatabse.child(user_id).child(mcurrentUser.getUid()).child("date").setValue(currentdate).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     mReqDatabse.child(mcurrentUser.getUid()).child(user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {

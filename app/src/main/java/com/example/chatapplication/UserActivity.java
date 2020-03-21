@@ -98,7 +98,7 @@ protected void onCreate(Bundle savedInstanceState) {
 
         public void setImage(String image, Context ctx){
             CircleImageView imageuser=(CircleImageView)mView.findViewById(R.id.profile_image);
-            Picasso.with(ctx).load(image).placeholder(R.drawable.anni).into(imageuser);
+            Picasso.with(UserActivity.this).load(image).placeholder(R.drawable.anni).into(imageuser);
         }
     }
     @Override

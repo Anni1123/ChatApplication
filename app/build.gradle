@@ -34,6 +34,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.0.0'
     implementation 'com.google.firebase:firebase-storage:19.0.0'
     implementation 'com.firebaseui:firebase-ui-database:6.2.0'
+    implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.4'
     testImplementation 'junit:junit:4.12'
     implementation 'id.zelory:compressor:3.0.0'
     implementation 'com.firebase:firebase-client-android:2.5.1'

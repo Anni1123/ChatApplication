@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/single_status"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -34,10 +35,10 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="155dp"
-        android:textStyle="normal"
-        android:alpha="0.6"
         android:layout_marginTop="105dp"
+        android:alpha="0.6"
         android:text="Hello I am using ChatApp"
         android:textColor="#000000"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:textStyle="normal" />
 </RelativeLayout>
