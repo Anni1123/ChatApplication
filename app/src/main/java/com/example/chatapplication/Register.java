@@ -48,6 +48,7 @@ public class Register extends AppCompatActivity {
         setSupportActionBar(mtoolbar);
         mtoolbar.setTitle("Register");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mprogress=new ProgressDialog(this);
 
         regbutt.setOnClickListener(new View.OnClickListener() {

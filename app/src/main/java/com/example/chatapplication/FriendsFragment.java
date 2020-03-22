@@ -38,14 +38,15 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       mMainVIew=inflater.inflate(R.layout.fragment_friends, container, false);
-       mFrienhdList=(RecyclerView)mMainVIew.findViewById(R.id.recyclerview);
-       mAuth=FirebaseAuth.getInstance();
-       mCurrentUserid=mAuth.getCurrentUser().getUid();
-       mFriendDatabse= FirebaseDatabase.getInstance().getReference().child("Friends").child(mCurrentUserid);
-       mFrienhdList.setHasFixedSize(true);
-       mFrienhdList.setLayoutManager(new LinearLayoutManager(getContext()));
-       return mMainVIew;
+        mMainVIew=inflater.inflate(R.layout.fragment_friends, container, false);
+        mFrienhdList=(RecyclerView)mMainVIew.findViewById(R.id.recyclerview);
+        mAuth=FirebaseAuth.getInstance();
+        mCurrentUserid=mAuth.getCurrentUser().getUid();
+        if(mCurrentUserid!=null)
+            mFriendDatabse= FirebaseDatabase.getInstance().getReference().child("Friends").child(mCurrentUserid);
+        mFrienhdList.setHasFixedSize(true);
+        mFrienhdList.setLayoutManager(new LinearLayoutManager(getContext()));
+        return mMainVIew;
     }
 
     @Override
@@ -98,6 +99,3 @@ public class FriendsFragment extends Fragment {
         friendsRecyclerViewAdapter.stopListening();
     }
 }
-
-
-

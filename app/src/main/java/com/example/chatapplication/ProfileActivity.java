@@ -2,6 +2,7 @@ package com.example.chatapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private String current_state;
     private DatabaseReference friendDatabse;
+    private Toolbar mtoolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +61,11 @@ public class ProfileActivity extends AppCompatActivity {
         declinereq.setEnabled(false);
         current_state = "not friend";
         sendreq = (Button) findViewById(R.id.proreq);
+        mtoolbar=(Toolbar)findViewById(R.id.p_toolbar);
+        setSupportActionBar(mtoolbar);
+        getSupportActionBar().setTitle("Profile");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Image Uploading");
         progressDialog.setMessage("Uploading....");
@@ -195,7 +202,7 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
 
-                            friendDatabse.child(user_id).child(mcurrentUser.getUid()).child("date").setValue(currentdate).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            friendDatabse.child(user_id).child(mcurrentUser.getUid()).setValue(currentdate).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     mReqDatabse.child(mcurrentUser.getUid()).child(user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {

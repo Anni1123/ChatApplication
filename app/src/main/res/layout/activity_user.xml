@@ -13,7 +13,8 @@
     android:id="@+id/recycle"
     android:layout_width="401dp"
     android:layout_height="670dp"
-    android:layout_alignParentStart="true">
+    android:layout_alignParentStart="true"
+        android:layout_below="@+id/user_layout">
     </androidx.recyclerview.widget.RecyclerView>
 
 </RelativeLayout>

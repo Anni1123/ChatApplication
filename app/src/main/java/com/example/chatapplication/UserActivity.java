@@ -1,10 +1,12 @@
 package com.example.chatapplication;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -59,7 +61,7 @@ protected void onCreate(Bundle savedInstanceState) {
                 return new UsersviewHolder(view);
             }
             @Override
-            protected void onBindViewHolder(@NonNull UsersviewHolder holder, int position, @NonNull Users model) {
+            protected void onBindViewHolder(@NonNull UsersviewHolder holder, final int position, @NonNull Users model) {
 
                 holder.setName(model.getName());
 
@@ -69,9 +71,28 @@ protected void onCreate(Bundle savedInstanceState) {
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent profileIntent=new Intent(UserActivity.this,ProfileActivity.class);
-                        profileIntent.putExtra("user_id",user_id);
-                        startActivity(profileIntent);
+                        final CharSequence option[]=new CharSequence[]{"Open Profile","Send Messgae"};
+                        AlertDialog.Builder builder=new AlertDialog.Builder(UserActivity.this);
+                        builder.setTitle("Select options");
+                        builder.setItems(option, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(which==0){
+                                    Intent profileIntent=new Intent(UserActivity.this,ProfileActivity.class);
+                                    profileIntent.putExtra("user_id",user_id);
+                                    startActivity(profileIntent);
+                                    finish();
+                                }
+                                if(which==1){
+                                    Intent chatIntent=new Intent(UserActivity.this,ChatActivity.class);
+                                    chatIntent.putExtra("user_id",user_id);
+                                    startActivity(chatIntent);
+                                    finish();
+                                }
+
+                            }
+                        });
+                        builder.show();
                     }
                 });
             }
