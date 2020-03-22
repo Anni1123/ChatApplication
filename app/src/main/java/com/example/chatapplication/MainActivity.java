@@ -35,11 +35,6 @@ public class  MainActivity extends AppCompatActivity {
         mtoolbar=(Toolbar)findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mtoolbar);
         getSupportActionBar().setTitle("My Chat App");
-        mviewPager=(ViewPager) findViewById(R.id.viewpager);
-        mSectionsPagerAdapter=new SectionsPagerAdapter(getSupportFragmentManager());
-        mviewPager.setAdapter(mSectionsPagerAdapter );
-        mTabLayout=(TabLayout)findViewById(R.id.tablayout);
-        mTabLayout.setupWithViewPager(mviewPager);
     }
     @Override
     public void onStart() {

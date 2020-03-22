@@ -39,7 +39,8 @@ protected void onCreate(Bundle savedInstanceState) {
         mtoolbar=(Toolbar)findViewById(R.id.user_layout);
         setSupportActionBar(mtoolbar);
        getSupportActionBar().setTitle("Accounts Update");
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     mRecycle=(RecyclerView)findViewById(R.id.recycle);
     mUserDatabase= FirebaseDatabase.getInstance().getReference().child("Users");
     mRecycle.setHasFixedSize(true);

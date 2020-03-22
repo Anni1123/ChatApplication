@@ -21,7 +21,8 @@
         <activity android:name=".ProfileActivity"
             android:parentActivityName=".UserActivity"/>
         <activity
-            android:name=".UserActivity" />
+            android:name=".UserActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".StatusActivity"
             android:parentActivityName=".SettingActivity" />
