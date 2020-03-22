@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
@@ -23,6 +24,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,8 +34,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
@@ -49,11 +53,15 @@ public class ChatActivity extends AppCompatActivity {
     private String current_state;
     ImageButton btnsend;
     EditText text;
+    private final List<Messages> messagesList = new ArrayList<>();
+    private LinearLayoutManager mLinearLayout;
+    private MessageAdapter mAdapter;
     private RecyclerView mMessageList;
     private DatabaseReference friendDatabse;
     private Toolbar mtoolbar;
     private FirebaseAuth firebaseAuth;
     String user_id;
+    private DatabaseReference mMessageDatabase;
 String mcurrent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +84,12 @@ String mcurrent;
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mAdapter=new MessageAdapter(messagesList);
+        mLinearLayout=new LinearLayoutManager(this);
+        mMessageList.setHasFixedSize(true);
+        mMessageList.setAdapter(mAdapter);
+        mMessageList.setLayoutManager(mLinearLayout);
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -123,6 +137,7 @@ String mcurrent;
                 sendMessgae();
             }
         });
+        loadMessages();
     }
     public void sendMessgae(){
 
@@ -131,7 +146,7 @@ String mcurrent;
              String currentuserref="messages/" + mcurrent +"/" + user_id;
              String chatuserref="messages/" + user_id +"/"+mcurrent;
              DatabaseReference usermsgpush=mDatabase.child("messages").child(mcurrent).child(user_id).push();
-             String pushid=usermsgpush.getKey();
+             final String pushid=usermsgpush.getKey();
              Map messageMap=new HashMap();
              messageMap.put("message",message);
              messageMap.put("send",false);
@@ -150,6 +165,35 @@ String mcurrent;
              });
 
          }
+    }
+    private void loadMessages(){
+
+        mDatabase.child("messages").child(mcurrent).child(user_id).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
 
