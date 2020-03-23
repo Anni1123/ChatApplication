@@ -2,13 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="wrap_content"
     android:padding="10dp"
+    android:background="#ededed"
     android:id="@+id/messgae_single_layout">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="51dp"
+        android:layout_width="71dp"
         android:id="@+id/msg_profile_layout"
-        android:layout_height="51dp"
+        android:layout_height="71dp"
         android:src="@drawable/anni" />
+    <TextView
+        android:id="@+id/nameprofile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/msg_text_background"
+        android:padding="10dp"
+        android:text="hello"
+        android:textColor="#fff"
+        android:textSize="13sp" />
 
     <TextView
         android:id="@+id/msg_text_layout"
@@ -16,11 +30,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="48dp"
         android:background="@drawable/msg_text_background"
         android:padding="10dp"
-        android:text="TextView"
+        android:text="hello"
         android:textColor="#fff"
-        android:textSize="15sp" />
+        android:textSize="13sp" />
 </RelativeLayout>
