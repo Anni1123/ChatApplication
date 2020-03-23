@@ -1,40 +1,28 @@
 package com.example.chatapplication;
 
 public class Messages {
+    private String message;
+
     public Messages() {
     }
 
-    public Messages(String message, String seen, String time, String type) {
+    private String type;
+
+    public Messages(String message, String type, long time, boolean seen) {
         this.message = message;
-        this.seen = seen;
-        this.time = time;
         this.type = type;
+        this.time = time;
+        this.seen = seen;
     }
 
-    private String message;
+    private long time;
 
-    public String getMessages() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessages(String messages) {
-        this.message = messages;
-    }
-
-    public String getSeen() {
-        return seen;
-    }
-
-    public void setSeen(String seen) {
-        this.seen = seen;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getType() {
@@ -45,7 +33,21 @@ public class Messages {
         this.type = type;
     }
 
-    private String seen;
-    private String time;
-    private String type;
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
+    }
+
+    private boolean seen;
 }

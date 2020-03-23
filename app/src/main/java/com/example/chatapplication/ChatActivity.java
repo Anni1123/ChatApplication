@@ -59,6 +59,10 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView mMessageList;
     private DatabaseReference friendDatabse;
     private Toolbar mtoolbar;
+    private int itemPos = 0;
+
+    private String mLastKey = "";
+    private String mPrevKey = "";
     private FirebaseAuth firebaseAuth;
     String user_id;
     private DatabaseReference mMessageDatabase;
@@ -89,14 +93,15 @@ String mcurrent;
         mMessageList.setHasFixedSize(true);
         mMessageList.setAdapter(mAdapter);
         mMessageList.setLayoutManager(mLinearLayout);
-
+        mDatabase.child("Chat").child(mcurrent).child(user_id).child("seen").setValue(true);
+        loadMessages();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String disimage = dataSnapshot.child("image").getValue().toString();
                 String disname = dataSnapshot.child("name").getValue().toString();
                 username.setText(disname);
-                Picasso.with(ChatActivity.this).load(disimage).placeholder(R.drawable.anni).into(profileImage);
+                Picasso.get().load(disimage).placeholder(R.drawable.anni).into(profileImage);
             }
 
             @Override
@@ -137,7 +142,6 @@ String mcurrent;
                 sendMessgae();
             }
         });
-        loadMessages();
     }
     public void sendMessgae(){
 
@@ -167,12 +171,13 @@ String mcurrent;
          }
     }
     private void loadMessages(){
-
         mDatabase.child("messages").child(mcurrent).child(user_id).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
+                    Messages messages = dataSnapshot.getValue(Messages.class);
+                    messagesList.add(messages);
+                    mAdapter.notifyDataSetChanged();
+                }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

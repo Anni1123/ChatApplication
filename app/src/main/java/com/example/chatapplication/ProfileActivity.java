@@ -79,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 username.setText(disname);
                 userstatus.setText(disstatus);
-                Picasso.with(ProfileActivity.this).load(disimage).placeholder(R.drawable.anni).into(profileImage);
+                Picasso.get().load(disimage).placeholder(R.drawable.anni).into(profileImage);
                 //-----Friendlist\Request Feature-------------//
 
                 mReqDatabse.child(mcurrentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {

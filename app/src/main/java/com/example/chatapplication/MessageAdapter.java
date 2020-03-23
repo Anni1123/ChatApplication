@@ -31,7 +31,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
 
     private List<Messages> mMessageList;
-    private DatabaseReference mUserDatabase;
 
     public MessageAdapter(List<Messages> mMessageList) {
 
@@ -67,7 +66,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(final MessageViewHolder viewHolder, int i) {
 
         Messages c = mMessageList.get(i);
-        viewHolder.messageText.setText(c.getMessages());
+        viewHolder.messageText.setText(c.getMessage());
 
     }
 

@@ -5,9 +5,9 @@
     android:id="@+id/messgae_single_layout">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="81dp"
+        android:layout_width="51dp"
         android:id="@+id/msg_profile_layout"
-        android:layout_height="78dp"
+        android:layout_height="51dp"
         android:src="@drawable/anni" />
 
     <TextView
@@ -15,12 +15,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:padding="10dp"
-        android:textColor="#fff"
-        android:textSize="15sp"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/msg_text_background"
-        android:text="TextView" />
+        android:padding="10dp"
+        android:text="TextView"
+        android:textColor="#fff"
+        android:textSize="15sp" />
 </RelativeLayout>

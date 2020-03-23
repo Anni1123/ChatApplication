@@ -82,7 +82,7 @@ public class SettingActivity extends AppCompatActivity {
                 mname.setText(name);
                 mstatus.setText(status);
                // Picasso.with(SettingActivity.this).load(image).placeholder(R.drawable.anni).into(mimage);
-                Picasso.with(SettingActivity.this).load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.anni).
+                Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.anni).
                         into(mimage, new Callback() {
                             @Override
                             public void onSuccess() {
@@ -90,13 +90,10 @@ public class SettingActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onError() {
-
-                                Picasso.with(SettingActivity.this).load(image).placeholder(R.drawable.anni).into(mimage);
+                            public void onError(Exception e) {
+                                Picasso.get().load(image).placeholder(R.drawable.anni).into(mimage);
                             }
                         });
-
-
 
 
             }
