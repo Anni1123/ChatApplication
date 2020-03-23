@@ -5,8 +5,17 @@ public class Messages {
 
     public Messages() {
     }
-
     private String type;
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    private String from;
 
     public Messages(String message, String type, long time, boolean seen) {
         this.message = message;
