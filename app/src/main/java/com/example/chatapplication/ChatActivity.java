@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
@@ -61,12 +63,15 @@ public class ChatActivity extends AppCompatActivity {
     private Toolbar mtoolbar;
     private int itemPos = 0;
 
+    private SwipeRefreshLayout mRefresh;
     private String mLastKey = "";
     private String mPrevKey = "";
     private FirebaseAuth firebaseAuth;
     String user_id;
     private DatabaseReference mMessageDatabase;
 String mcurrent;
+private static final int TOTAL_ITEM_TO_LOAD=10;
+private int mcurrentpage=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +83,7 @@ String mcurrent;
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
         mcurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         username = (TextView) findViewById(R.id.useid);
+        mRefresh=(SwipeRefreshLayout)findViewById(R.id.msgswipe);
         profileImage = (ImageView) findViewById(R.id.imagprofil);
         mcurrent=mcurrentUser.getUid();
         mDatabase=FirebaseDatabase.getInstance().getReference();
@@ -142,6 +148,12 @@ String mcurrent;
                 sendMessgae();
             }
         });
+        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+            }
+        });
     }
     public void sendMessgae(){
 
@@ -173,12 +185,15 @@ String mcurrent;
          }
     }
     private void loadMessages(){
-        mDatabase.child("messages").child(mcurrent).child(user_id).addChildEventListener(new ChildEventListener() {
+        DatabaseReference databaseReference= mDatabase.child("messages").child(mcurrent).child(user_id);
+        Query message=databaseReference.limitToLast(mcurrentpage*TOTAL_ITEM_TO_LOAD);
+       message.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     Messages messages = dataSnapshot.getValue(Messages.class);
                     messagesList.add(messages);
                     mAdapter.notifyDataSetChanged();
+                    mMessageList.scrollToPosition(messagesList.size()-1);
                 }
 
             @Override
