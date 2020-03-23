@@ -71,7 +71,7 @@ public class ChatActivity extends AppCompatActivity {
     private DatabaseReference mMessageDatabase;
 String mcurrent;
 private static final int TOTAL_ITEM_TO_LOAD=10;
-private int mcurrentpage=0;
+private int mcurrentpage=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,6 +152,9 @@ private int mcurrentpage=0;
             @Override
             public void onRefresh() {
 
+                mcurrentpage++;
+                messagesList.clear();
+                loadMessages();
             }
         });
     }
@@ -194,6 +197,7 @@ private int mcurrentpage=0;
                     messagesList.add(messages);
                     mAdapter.notifyDataSetChanged();
                     mMessageList.scrollToPosition(messagesList.size()-1);
+                    mRefresh.setRefreshing(false);
                 }
 
             @Override
