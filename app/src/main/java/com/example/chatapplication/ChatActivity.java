@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -54,6 +55,7 @@ public class ChatActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private String current_state;
     ImageButton btnsend;
+    ImageButton image;
     EditText text;
     private final List<Messages> messagesList = new ArrayList<>();
     private LinearLayoutManager mLinearLayout;
@@ -62,6 +64,7 @@ public class ChatActivity extends AppCompatActivity {
     private DatabaseReference friendDatabse;
     private Toolbar mtoolbar;
     private int itemPos = 0;
+    private static final int GALLERY_PICK = 1;
 
     private SwipeRefreshLayout mRefresh;
     private String mLastKey = "";
@@ -77,6 +80,7 @@ private int mcurrentpage=1;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         user_id = getIntent().getStringExtra("user_id");
+        image=(ImageButton)findViewById(R.id.chatimagesend);
         declinereq = (Button) findViewById(R.id.decline);
         firebaseAuth=FirebaseAuth.getInstance();
         mMessageList=(RecyclerView)findViewById(R.id.messagelist);
@@ -101,6 +105,16 @@ private int mcurrentpage=1;
         mMessageList.setLayoutManager(mLinearLayout);
         mDatabase.child("Chat").child(mcurrent).child(user_id).child("seen").setValue(true);
         loadMessages();
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent galleryIntent = new Intent();
+                galleryIntent.setType("image/*");
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
+            }
+        });
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -171,7 +185,7 @@ private int mcurrentpage=1;
                     messagesList.add(itemPos++,messages);
                 }
                 else {
-                    mPrevKey=messageKey;
+                    mPrevKey=mLastKey;
                 }
                 if(itemPos == 1){
 
