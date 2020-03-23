@@ -186,7 +186,6 @@ private int mcurrentpage=1;
         if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
             Uri imageUrl = data.getData();
            final String currentuserref="messages/" + mcurrent +"/" + user_id;
-
         final String chatuserref="messages/" + user_id +"/"+mcurrent;
 
             DatabaseReference usermsgpush=mDatabase.child("messages").child(mcurrent).child(user_id).push();
@@ -276,6 +275,49 @@ private int mcurrentpage=1;
         });
 
     }
+    private void loadMessages(){
+        DatabaseReference databaseReference= mDatabase.child("messages").child(mcurrent).child(user_id);
+        Query message=databaseReference.limitToLast(mcurrentpage*TOTAL_ITEM_TO_LOAD);
+        message.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Messages messages = dataSnapshot.getValue(Messages.class);
+                itemPos++;
+                if(itemPos == 1){
+
+                    String messageKey = dataSnapshot.getKey();
+
+                    mLastKey = messageKey;
+                    mPrevKey=messageKey;
+
+                }
+                messagesList.add(messages);
+                mAdapter.notifyDataSetChanged();
+                mMessageList.scrollToPosition(messagesList.size()-1);
+                mRefresh.setRefreshing(false);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     public void sendMessgae(){
 
         String message=text.getText().toString();
@@ -305,49 +347,7 @@ private int mcurrentpage=1;
 
          }
     }
-    private void loadMessages(){
-        DatabaseReference databaseReference= mDatabase.child("messages").child(mcurrent).child(user_id);
-        Query message=databaseReference.limitToLast(mcurrentpage*TOTAL_ITEM_TO_LOAD);
-       message.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    Messages messages = dataSnapshot.getValue(Messages.class);
-                    itemPos++;
-                if(itemPos == 1){
 
-                    String messageKey = dataSnapshot.getKey();
-
-                    mLastKey = messageKey;
-                    mPrevKey=messageKey;
-
-                }
-                    messagesList.add(messages);
-                    mAdapter.notifyDataSetChanged();
-                    mMessageList.scrollToPosition(messagesList.size()-1);
-                    mRefresh.setRefreshing(false);
-                }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 }
 
 

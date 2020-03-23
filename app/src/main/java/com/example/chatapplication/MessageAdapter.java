@@ -33,6 +33,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     private FirebaseUser firebaseAuth;
     private DatabaseReference mUserDatabase;
+    private DatabaseReference databaseReference;
     public MessageAdapter(List<Messages> mMessageList) {
 
         this.mMessageList = mMessageList;
@@ -73,7 +74,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         String from_user = c.getFrom();
         String message_type = c.getType();
 
-
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
@@ -81,8 +81,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 String name = dataSnapshot.child("name").getValue().toString();
-                String image = dataSnapshot.child("thumb_image").getValue().toString();
-
+                String image = dataSnapshot.child("image").getValue().toString();
 
                 Picasso.get().load(image)
                         .placeholder(R.drawable.anni).into(viewHolder.profileImage);
