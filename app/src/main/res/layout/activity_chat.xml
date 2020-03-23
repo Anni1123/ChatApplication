@@ -54,11 +54,16 @@
         android:id="@+id/bottom"
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content">
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_add_black_24dp"
+            android:layout_alignParentLeft="true"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/chatmsg"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="50dp"
             android:layout_toLeftOf="@+id/chatsend"
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
