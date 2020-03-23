@@ -153,10 +153,59 @@ private int mcurrentpage=1;
             public void onRefresh() {
 
                 mcurrentpage++;
-                messagesList.clear();
-                loadMessages();
+                itemPos=0;
+                loadMoreMessages();
             }
         });
+    }
+    public void loadMoreMessages(){
+        DatabaseReference databaseReference= mDatabase.child("messages").child(mcurrent).child(user_id);
+        Query message=databaseReference.orderByKey().endAt(mLastKey).limitToLast(10);
+        message.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Messages messages = dataSnapshot.getValue(Messages.class);
+
+                String messageKey = dataSnapshot.getKey();
+                if(!mPrevKey.equals(messageKey)){
+                    messagesList.add(itemPos++,messages);
+                }
+                else {
+                    mPrevKey=messageKey;
+                }
+                if(itemPos == 1){
+
+                    mLastKey = messageKey;
+
+                }
+
+                mAdapter.notifyDataSetChanged();
+                mRefresh.setRefreshing(false);
+                mLinearLayout.scrollToPositionWithOffset(10,0);
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
     public void sendMessgae(){
 
@@ -194,6 +243,15 @@ private int mcurrentpage=1;
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     Messages messages = dataSnapshot.getValue(Messages.class);
+                    itemPos++;
+                if(itemPos == 1){
+
+                    String messageKey = dataSnapshot.getKey();
+
+                    mLastKey = messageKey;
+                    mPrevKey=messageKey;
+
+                }
                     messagesList.add(messages);
                     mAdapter.notifyDataSetChanged();
                     mMessageList.scrollToPosition(messagesList.size()-1);
