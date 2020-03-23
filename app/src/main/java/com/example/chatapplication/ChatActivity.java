@@ -156,9 +156,11 @@ String mcurrent;
              messageMap.put("send",false);
              messageMap.put("type","text");
              messageMap.put("time" ,ServerValue.TIMESTAMP);
+             messageMap.put("from",mcurrent);
              Map messageusermap=new HashMap();
              messageusermap.put(currentuserref +"/"+pushid,messageMap);
              messageusermap.put(chatuserref +"/"+pushid,messageMap);
+             text.setText("");
              mDatabase.updateChildren(messageusermap, new DatabaseReference.CompletionListener() {
                  @Override
                  public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
