@@ -122,6 +122,7 @@ public class SettingActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
             }
         });
+
     }
 
     @Override

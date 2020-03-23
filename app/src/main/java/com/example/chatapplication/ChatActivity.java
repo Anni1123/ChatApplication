@@ -120,7 +120,7 @@ private int mcurrentpage=1;
                 Intent galleryIntent = new Intent();
                 galleryIntent.setType("image/*");
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
+               startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
             }
         });
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -185,47 +185,24 @@ private int mcurrentpage=1;
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
             Uri imageUrl = data.getData();
-           final String currentuserref="messages/" + mcurrent +"/" + user_id;
-        final String chatuserref="messages/" + user_id +"/"+mcurrent;
+            final String currentuserref="messages/" + mcurrent +"/" + user_id;
+            final String chatuserref="messages/" + user_id +"/"+mcurrent;
 
             DatabaseReference usermsgpush=mDatabase.child("messages").child(mcurrent).child(user_id).push();
-
             final String pushid=usermsgpush.getKey();
-                final StorageReference filepath = mImageStorage.child("msg_img").child(pushid + ".jpg");
-                filepath.putFile(imageUrl).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+            final StorageReference filepath = mImageStorage.child("msg_img").child(pushid + ".jpg");
+            filepath.putFile(imageUrl).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
-                        if (task.isSuccessful()) {
-                            filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    String url = uri.toString();
-                                    Map messageMap = new HashMap();
-                                    messageMap.put("message", url);
-                                    messageMap.put("send", false);
-                                    messageMap.put("type", "image");
-                                    messageMap.put("time", ServerValue.TIMESTAMP);
-                                    messageMap.put("from", mcurrent);
-                                    Map messageusermap = new HashMap();
-                                    messageusermap.put(currentuserref + "/" + pushid, messageMap);
-                                    messageusermap.put(chatuserref + "/" + pushid, messageMap);
-                                    text.setText("");
-                                    mDatabase.updateChildren(messageusermap, new DatabaseReference.CompletionListener() {
-                                        @Override
-                                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                                            if (databaseError != null) {
-                                                Log.d("chat app", databaseError.getMessage().toString());
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-                        }
+                    if (task.isSuccessful()) {
+                        Toast.makeText(ChatActivity.this,"Donr",Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
+            });
         }
     }
+
     public void loadMoreMessages(){
         DatabaseReference databaseReference= mDatabase.child("messages").child(mcurrent).child(user_id);
         Query message=databaseReference.orderByKey().endAt(mLastKey).limitToLast(10);
