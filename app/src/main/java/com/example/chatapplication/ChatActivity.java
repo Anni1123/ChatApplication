@@ -194,6 +194,9 @@ private int mcurrentpage=1;
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.show();
             Uri imageUrl = data.getData();
+            CropImage.activity(imageUrl)
+                    .setAspectRatio(1, 1)
+                    .start(this);
             final String currentuserref = "messages/" + mcurrent + "/" + user_id;
             final String chatuserref = "messages/" + user_id + "/" + mcurrent;
 
