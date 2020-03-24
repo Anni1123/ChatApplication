@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,6 +39,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -61,6 +63,7 @@ public class ChatActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private String current_state;
     ImageButton btnsend;
+    private StorageTask uploadTask;
     ImageButton image;
     EditText text;
     private final List<Messages> messagesList = new ArrayList<>();
@@ -77,6 +80,7 @@ public class ChatActivity extends AppCompatActivity {
     private String mPrevKey = "";
     private FirebaseAuth firebaseAuth;
     String user_id;
+    String myUrl;
     private DatabaseReference mMessageDatabase;
 String mcurrent;
     private StorageReference mImageStorage;
@@ -184,26 +188,53 @@ private int mcurrentpage=1;
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setTitle("Uploading Image...");
+            mProgressDialog.setMessage("Please wait while image is uploading");
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.show();
             Uri imageUrl = data.getData();
-            final String currentuserref="messages/" + mcurrent +"/" + user_id;
-            final String chatuserref="messages/" + user_id +"/"+mcurrent;
+            final String currentuserref = "messages/" + mcurrent + "/" + user_id;
+            final String chatuserref = "messages/" + user_id + "/" + mcurrent;
 
-            DatabaseReference usermsgpush=mDatabase.child("messages").child(mcurrent).child(user_id).push();
-            final String pushid=usermsgpush.getKey();
+            DatabaseReference usermsgpush = mDatabase.child("messages").child(mcurrent).child(user_id).push();
+            final String pushid = usermsgpush.getKey();
             final StorageReference filepath = mImageStorage.child("msg_img").child(pushid + ".jpg");
-            filepath.putFile(imageUrl).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            uploadTask=filepath.putFile(imageUrl);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            mProgressDialog.dismiss();
+                            String url = uri.toString();
+                        Map messageMap = new HashMap();
+                        messageMap.put("message", url);
+                        messageMap.put("send", false);
+                        messageMap.put("type", "image");
+                        messageMap.put("time", ServerValue.TIMESTAMP);
+                        messageMap.put("from", mcurrent);
+                        Map messageusermap = new HashMap();
+                        messageusermap.put(currentuserref + "/" + pushid, messageMap);
+                        messageusermap.put(chatuserref + "/" + pushid, messageMap);
+                        text.setText("");
 
-                    if (task.isSuccessful()) {
-                        Toast.makeText(ChatActivity.this,"Donr",Toast.LENGTH_SHORT).show();
+                        mDatabase.updateChildren(messageusermap, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                if (databaseError != null) {
+                                    Log.d("chat app", databaseError.getMessage().toString());
+                                }
+                            }
+                        });
                     }
-                }
-            });
+                });
+            }
+    });
         }
     }
-
-    public void loadMoreMessages(){
+            public void loadMoreMessages(){
         DatabaseReference databaseReference= mDatabase.child("messages").child(mcurrent).child(user_id);
         Query message=databaseReference.orderByKey().endAt(mLastKey).limitToLast(10);
         message.addChildEventListener(new ChildEventListener() {
