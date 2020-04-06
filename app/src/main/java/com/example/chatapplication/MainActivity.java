@@ -3,6 +3,9 @@ package com.example.chatapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -10,6 +13,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +28,9 @@ public class  MainActivity extends AppCompatActivity {
     private ViewPager mviewPager;
     private FirebaseAuth firebaseAuth;
     private Toolbar mtoolbar;
+    FragmentManager manager;
+    private Button add;
+    FragmentTransaction transaction;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private TabLayout mTabLayout;
 
@@ -34,7 +42,9 @@ public class  MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mtoolbar=(Toolbar)findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mtoolbar);
+        add=(Button)findViewById(R.id.add);
         getSupportActionBar().setTitle("My Chat App");
+
     }
     @Override
     public void onStart() {

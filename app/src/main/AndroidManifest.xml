@@ -16,13 +16,15 @@
         android:roundIcon="@drawable/asdf"
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChatActivity"
-            android:parentActivityName=".UserActivity"></activity>
-        <activity android:name=".ProfileActivity"
-            android:parentActivityName=".UserActivity"/>
+        <activity
+            android:name=".ChatActivity"
+            android:parentActivityName=".UserActivity" />
+        <activity
+            android:name=".ProfileActivity"
+            android:parentActivityName=".UserActivity" />
         <activity
             android:name=".UserActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".StatusActivity"
             android:parentActivityName=".SettingActivity" />
