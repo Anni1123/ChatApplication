@@ -5,10 +5,27 @@ public class Messages {
 
     public Messages() {
     }
-    private String type;
+    private String type,to;
+
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
+    }
 
     public String getFrom() {
         return from;
+    }
+
+    public Messages(String message, String type, String to, String from, long time, boolean seen) {
+        this.message = message;
+        this.type = type;
+        this.to = to;
+        this.from = from;
+        this.time = time;
+        this.seen = seen;
     }
 
     public void setFrom(String from) {
@@ -16,13 +33,6 @@ public class Messages {
     }
 
     private String from;
-
-    public Messages(String message, String type, long time, boolean seen) {
-        this.message = message;
-        this.type = type;
-        this.time = time;
-        this.seen = seen;
-    }
 
     private long time;
 

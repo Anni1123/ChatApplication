@@ -44,7 +44,6 @@ public class  MainActivity extends AppCompatActivity {
         setSupportActionBar(mtoolbar);
         add=(Button)findViewById(R.id.add);
         getSupportActionBar().setTitle("My Chat App");
-
     }
     @Override
     public void onStart() {

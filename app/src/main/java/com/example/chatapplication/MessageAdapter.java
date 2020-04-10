@@ -56,6 +56,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public CircleImageView profileImage;
         public TextView displayName;
         public ImageView messageImage;
+        private TextView seen;
 
         public MessageViewHolder(View view) {
             super(view);

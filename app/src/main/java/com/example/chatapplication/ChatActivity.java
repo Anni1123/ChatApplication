@@ -84,6 +84,7 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     String user_id;
     String myUrl;
+    ValueEventListener seenListener;
     private DatabaseReference mMessageDatabase;
 String mcurrent;
     private StorageReference mImageStorage;
